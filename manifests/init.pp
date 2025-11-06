@@ -96,7 +96,7 @@ class mailman (
   $language              = 'en',
   $mta                   = 'Manual',
   $smtp_hostname         = $mailman::params::smtp_hostname,
-  $http_hostname         = $::hostname,
+  $http_hostname         = $facts['networking']['hostname'],
   $default_url_pattern   = 'https://%s/mailman/',
   $virtual_host_overview = false,
   $smtp_max_rcpts        = '500',
@@ -126,7 +126,7 @@ validate_legacy(String, validate_re, $smtp_max_rcpts, '[0-9]*')
   # it directly. It's only used to derive other parameters, like data_dir.
   # CAVEAT: On RHEL, rmlist requires var_prefix to match list_data_dir.
   $var_prefix               = $mailman::params::var_prefix
-  if ($::osfamily == 'RedHat') and ($list_data_dir != "${var_prefix}/lists") {
+  if ($::facts['os']['family'] == 'RedHat') and ($list_data_dir != "${var_prefix}/lists") {
     fail('rmlist requires that var_prefix is parent of list_data_dir on RHEL')
   }
 
@@ -147,7 +147,7 @@ validate_legacy(String, validate_re, $smtp_max_rcpts, '[0-9]*')
   $site_pw_hash             = sha1($site_pw)
 
   package { $mm_package:
-    ensure  => installed,
+    ensure => installed,
   }
 
   include mailman::config
@@ -262,7 +262,7 @@ validate_legacy(String, validate_re, $smtp_max_rcpts, '[0-9]*')
     require => File[$archive_dir],
   }
 
-  if $::osfamily == 'RedHat' {
+  if $facts['os']['family'] == 'RedHat' {
     # Put some symlinks in /etc/ to be more like the official RHEL packages
     include 'mailman::etclinks'
   }
