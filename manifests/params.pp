@@ -30,11 +30,11 @@
 class mailman::params {
   $mm_package = 'mailman'
   $mm_service = 'mailman'
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       $mm_username   = 'mailman'
       $mm_groupname  = 'mailman'
-      $smtp_hostname = $::fqdn
+      $smtp_hostname = $facts['networking']['fqdn']
       $prefix        = '/usr/lib/mailman'
       $exec_prefix   = $prefix
       $var_prefix    = '/var/lib/mailman'
@@ -64,7 +64,7 @@ class mailman::params {
       $mm_groupname  = 'list'
       # Mailman requires two more DNS labels but Debian systems
       # only use single label "localhost" name.
-      $smtp_hostname = "mail.${::hostname}"
+      $smtp_hostname = "mail.${facts['networking']['hostname']}"
       $prefix        = '/usr/lib/mailman'
       $exec_prefix   = $prefix
       $var_prefix    = '/var/lib/mailman'
@@ -89,7 +89,7 @@ class mailman::params {
       $pid_file      = "${pid_dir}/master-qrunner.pid"
     }
     default: {
-      fail("Mailman module is not supported on ${::osfamily}.")
+      fail("Mailman module is not supported on ${facts['os']['family']}.")
     }
   }
 }
