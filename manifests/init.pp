@@ -91,36 +91,36 @@
 # Copyright 2013 Nic Waller, unless otherwise noted.
 #
 class mailman (
-  $enable_service        = false,
-  $site_pw               = 'CHANGEME',
-  $language              = 'en',
-  $mta                   = 'Manual',
-  $smtp_hostname         = $mailman::params::smtp_hostname,
-  $http_hostname         = $facts['networking']['hostname'],
-  $default_url_pattern   = 'https://%s/mailman/',
-  $virtual_host_overview = false,
-  $smtp_max_rcpts        = '500',
-  $list_data_dir         = $mailman::params::list_data_dir,
-  $log_dir               = $mailman::params::log_dir,
-  $lock_dir              = $mailman::params::lock_dir,
-  $data_dir              = $mailman::params::data_dir,
-  $pid_dir               = $mailman::params::pid_dir,
-  $spam_dir              = $mailman::params::spam_dir,
-  $queue_dir             = $mailman::params::queue_dir,
-  $archive_dir           = $mailman::params::archive_dir,
-  $pid_file              = $mailman::params::pid_file,
-  $option_hash           = { 'DEFAULT_MAX_NUM_RECIPIENTS' => 20 },
+  Boolean $enable_service       = false,
+  String $site_pw               = 'CHANGEME',
+  String $language              = 'en',
+  Enum['Manual','Postfix'] $mta = 'Manual',
+  Stdlib::Host $smtp_hostname   = $mailman::params::smtp_hostname,
+  String $http_hostname         = $facts['networking']['hostname'],
+  String $default_url_pattern   = 'https://%s/mailman/',
+  Boolean $virtual_host_overview = false,
+  Integer $smtp_max_rcpts        = '500',
+  Stdlib::Absolutepath $list_data_dir = $mailman::params::list_data_dir,
+  Stdlib::Absolutepath $log_dir               = $mailman::params::log_dir,
+  Stdlib::Absolutepath $lock_dir              = $mailman::params::lock_dir,
+  Stdlib::Absolutepath $data_dir              = $mailman::params::data_dir,
+  Stdlib::Absolutepath $pid_dir               = $mailman::params::pid_dir,
+  Stdlib::Absolutepath $spam_dir              = $mailman::params::spam_dir,
+  Stdlib::Absolutepath $queue_dir             = $mailman::params::queue_dir,
+  Stdlib::Absolutepath $archive_dir           = $mailman::params::archive_dir,
+  Stdlib::Absolutepath $pid_file              = $mailman::params::pid_file,
+  Hash $option_hash           = { 'DEFAULT_MAX_NUM_RECIPIENTS' => 20 },
 ) inherits mailman::params {
   $langs = ['ar','ca','cs','da','de','en','es','et','eu','fi','fr','gl','he',
     'hr','hu','ia','it','ja','ko','lt','nl','no','pl','pt','pt_BR','ro',
     'ru','sk','sl','sr','sv','tr','uk','vi','zh_CN','zh_TW']
-validate_legacy(Boolean, validate_bool, $enable_service)
-validate_legacy(String,validate_re, $language, $langs)
-validate_legacy(Enum['Manual','Postfix'],validate_re,$mta)
-validate_legacy(String,validate_re, $smtp_hostname, '^[-a-zA-Z0-9]+\.[-a-zA-Z0-9\.]+$')
-validate_legacy(String, validate_re , $http_hostname, '^[-a-zA-Z0-9\.]+$')
-validate_legacy(Boolean,validate_bool,$virtual_host_overview)
-validate_legacy(String, validate_re, $smtp_max_rcpts, '[0-9]*')
+# validate_legacy(Boolean, validate_bool, $enable_service)
+# validate_legacy(String,validate_re, $language, $langs)
+# validate_legacy(Enum['Manual','Postfix'],validate_re,$mta)
+# validate_legacy(String,validate_re, $smtp_hostname, '^[-a-zA-Z0-9]+\.[-a-zA-Z0-9\.]+$')
+# validate_legacy(String, validate_re , $http_hostname, '^[-a-zA-Z0-9\.]+$')
+# validate_legacy(Boolean,validate_bool,$virtual_host_overview)
+# validate_legacy(String, validate_re, $smtp_max_rcpts, '[0-9]*')
 
   # Don't expose var_prefix as a parameter because no functionality depends on
   # it directly. It's only used to derive other parameters, like data_dir.
